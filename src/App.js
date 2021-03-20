@@ -1,25 +1,37 @@
-import logo from './logo.svg';
+import React, { Component } from 'react';
 import './App.css';
+import fire from './fire';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+class App extends Component {
+
+  state = {
+    text : ""
+  }
+
+  handleText = e => {
+    this.setState({
+      text : e.target.value
+    })
+  }
+
+  handleSubmit = e => {
+    let messageRef = fire.database().ref('messages').orderByKey().limitToLast(100);
+    fire.database().ref('messages').push(this.state.text);
+    this.setState({
+      text : ""
+    })
+  }
+
+  render() {
+    return (
+      <div className="App-header">
+        <h3 style={{ color: "white" }}>Enter Something to Store to Firebase Database:</h3>
+        <input type="text" onChange={this.handleText} id="inputText" />
+        <br />
+        <button onClick={this.handleSubmit}>Save</button>
+      </div>
+    );
+  }
 }
 
 export default App;
